@@ -29,8 +29,9 @@
       <div class="form-group">
       <label>Select Age</label>
       <select name="age" class="form-control">
-  <option value="25"> less than 25 </option>
-  <option value="25"> gretter than 25 </option>
+  <option> select </option>
+  <option value="LT25"> less than 25 </option>
+  <option value="GT25"> gretter than 25 </option>
 </select>
       </div>
       </div>
@@ -52,9 +53,18 @@ mysql_select_db($mysql_database, $bd) or die("Error on database connection");
 $per_page = 5;     
   if($_SERVER["REQUEST_METHOD"]=="POST")
   {
-$result = mysql_query("SELECT * FROM customer where c_name='$name' OR c_email='$email' OR c_dob='$age'");
+$result = mysql_query("SELECT * FROM customer where c_name='$name' OR c_email='$email'");
+if($age=="LT25")
+{
+    $result = mysql_query("SELECT * from customer where DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), c_dob)), '%Y')+0<25") ;
+   
 }
-//elseif{$result = mysql_query("SELECT * FROM customer where c_id='("select id(datediff(curdate(),c_dob) / 365) from customer")");}
+if($age=="GT25")
+{
+    $result = mysql_query("SELECT * from customer where DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), c_dob)), '%Y')+0>25") ;
+   
+}
+}
 else
 {
 $result = mysql_query("SELECT * FROM customer");
